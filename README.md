@@ -1,14 +1,16 @@
-# Keasy
+# Keasy - Password Manager
 Keasy is open source GUI password manager. You can use it only by command which CLI-like.
 
-Almost functions work only on Windows now yet.
+This is alpha version. Almost functions work only on Windows now yet.
 
-* What is convenience of Keasy?
+* [What is convenience of Keasy?](#What-is-convenience-of-Keasy?)
 * [Structure](#Structure)
 * [Run](#Run)
 * [Usage](#Usage)
 * [Contribution](#Contribution)
 
+
+<a id = "What-is-convenience-of-Keasy?"></a>
 
 # What is convenience of Keasy?
 Keasy can realize CLI-like operation speed on GUI application. 
@@ -22,6 +24,8 @@ But Keasy can operated by only keyboard.
 First you hide Keasy into task tray by Ctrl+Ctrl, and open website. Then open Keasy by Ctrl+Ctrl and find account. hide Keasy to focus website, finally paste username and password by Shift+Shift.
 
 You only use mouse when open website or focus input-form.
+
+<a id = "Structure"></a>
 
 # Structure
 GUI: PyQt5  
@@ -41,6 +45,9 @@ Keasy use DB after decrypt "encrypted.keasy" and save to same file.
 And Keasy delete "keasy.db" before quit itself.
 
 "encrypted.keasy" is only open by your master password.
+
+
+<a id = "Run"></a>
 
 # Run
 ## Use with Python3
@@ -122,23 +129,30 @@ pyinstaller .\Keasy.spec
 ```
 
 
+<a id = "Usage"></a>
+
 # Usage
 ## Console-commands
 * [exit](#exit)
-* [find](#find)
-* [memorize](#memorize)
+* [find [input-text]](#find)
+* [memorize [service-name] [user-ID/Mail]](#memorize)
 * [show](#show)
 * [hide](#hide)
 * [add](#add)
-* [edit](#edit)
-* [delete](#delete)
+* [edit [service-name] [user-ID/Mail] [choose-infomation]](#edit)
+* [delete [service-name] (user-ID/Mail)](#delete)
 * [master](#master)
+
+
+<a id = "exit"></a>
 
 ### exit  
 Quit Keasy.
 
 
-### find [input-text]  
+<a id = "find"></a>
+
+### find[input-text]  
 Search service-name by input-text and display their. <br><br> 
 If you have registered search-word, and it includes input-text, Keasy bring service-name which has this search-word.  <br><br>
 At this time, If Keasy brought up only one service-name, Keasy show you account(user-ID/Mail, password, remarks) service-name has.
@@ -147,19 +161,26 @@ For example...
 $ find git
 ```
 
+<a id = "memorize"></a>
 
 ### memorize [service-name] [user-ID/Mail]  
 Choose one account, then remember user-name and password temporary. <br> 
 You can paste remembered datas by Shift -> Shift. Keasy do that "paste user-name"->"press tab key"->"paste password".
 
 
+<a id = "show"></a>
+
 ### show  
 Keasy shows raw passwords which displayed.
 
 
+<a id = "hide"></a>
+
 ### hide  
 Keasy hides passwords which displayed. Passwords are changed to "*".
 
+
+<a id = "add"></a>
 
 ### add  
 Add account.  
@@ -172,6 +193,8 @@ user-name: sh141
 password: my-password  
 remarks:  
 
+
+<a id = "edit"></a>
 
 ### edit [service-name] [user-ID/Mail] [choose-infomation]  
 Edit account information.  
@@ -189,6 +212,8 @@ $ edit GitHub sh141 PassWord
 ```
 
 
+<a id = "delete"></a>
+
 ### delete [service-name] (user-ID/Mail)  
 Delete service or account.  
 If you delete service, Keasy delete also accounts which this service has.  
@@ -202,18 +227,24 @@ $ delete GitHub
 $ delete GitHub sh141
 ```
 
+<a id = "master"></a>
+
 ### master  
 change master-password.
 
 
-## Keyboard-shortcuts
-* [tab](#tab)
-* [shift+tab](#shift+tab)
-* [ctrl->ctrl](#ctrl->ctrl)
-* [shift->shift](#shift->shift)
-* [ctrl+shift->ctrl+shift](#ctrl+shift->ctrl+shift)
-* [ctrl+space](#ctrl+space)
+<a id = "Keyboard-shortcuts"></a>
 
+## Keyboard shortcuts
+* [tab](#tab)
+* [shift + tab](#shift-tab)
+* [ctrl -> ctrl](#ctrl-ctrl)
+* [shift -> shift](#shift-shift)
+* [ctrl + shift -> ctrl + shift](#ctrl-shift-ctrl-shift)
+* [ctrl + space](#ctrl-space)
+
+
+<a id = "tab"></a>
 
 ### tab
 Complement your command if input which like exist command on Keasy.
@@ -223,12 +254,16 @@ If database has some service-name or user-ID/Mail like your input, Keasy also co
 Keasy does not complement "exit" and "master" so you should input these fully.
 
 
-### shift+tab
+<a id = "shift-tab"></a>
+
+### shift + tab
 Rollback state at current mode.  
 You can use it at add mode and edit mode.
 
 
-### ctrl->ctrl
+<a id = "ctrl-ctrl"></a>
+
+### ctrl -> ctrl
 Hide Keasy into task tray, or open Keasy from task tray.
 You can always call Keasy because Keasy is monitoring your keyboard.
 
@@ -237,13 +272,17 @@ If you call Keasy when you are looking website, Keasy is getting URL of current 
 The auto-memorize works at Mozilla Firefox and Google Chrome now.
 
 
-### shift->shift
+<a id = "shift-shift"></a>
+
+### shift -> shift
 Input user-name and password to website automatically.
 
 Actually, Keasy do "ctrl+l (focus to address bar)"->"ctrl+c (copy URL)" using your keyboard.
 
 
-### ctrl+shift->ctrl+shift
+<a id = "ctrl-shift-ctrl-shift"></a>
+
+### ctrl + shift -> ctrl + shift
 You can also use it by ctrl+(shift->shift).
 
 Input user-name or password to website automatically.  
@@ -252,7 +291,9 @@ The difference from "shift -> shift" is that only input one data.
 To switch data, you should use "ctrl+space".
 
 
-### ctrl+space
+<a id = "ctrl-space"></a>
+
+### ctrl + space
 Switch data for input.
 
 At first you can input user-name automatically.  
@@ -260,6 +301,8 @@ If you want to input password, press "ctrl+shift -> ctrl+shift" then switch data
 
 It switches data to user-name or password every time press this hotkey.
 
+
+<a id = "Contribution"></a>
 
 # Contribution
 Pull requests and issues are very welcome.
