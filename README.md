@@ -152,7 +152,7 @@ Quit Keasy.
 
 <a id = "find"></a>
 
-### find[input-text]  
+### find [input-text]  
 Search service-name by input-text and display their. <br><br> 
 If you have registered search-word, and it includes input-text, Keasy bring service-name which has this search-word.  <br><br>
 At this time, If Keasy brought up only one service-name, Keasy show you account(user-ID/Mail, password, remarks) service-name has.

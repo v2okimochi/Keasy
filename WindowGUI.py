@@ -2,9 +2,9 @@
 from CommandEvents import CommandEvents
 from TimerThread import TimerThread
 import sys
-import os
-import time
-import re
+from os import path as os_path,remove as os_remove,name as os_name
+from time import sleep as time_sleep
+from re import search as re_search
 import traceback
 from ctypes.wintypes import POINT
 from ctypes import byref
@@ -104,8 +104,8 @@ class WindowGUI(QWidget):
     # pyinstallerでexe化した後でもアイコン画像を使えるようにパス変更
     def resource_path(self, relative_path):
         if hasattr(sys, '_MEIPASS'):
-            return os.path.join(sys._MEIPASS, relative_path)
-        return os.path.join(os.path.abspath("."), relative_path)
+            return os_path.join(sys._MEIPASS, relative_path)
+        return os_path.join(os_path.abspath("."), relative_path)
     
     # ウィンドウの左クリックで発動
     def mousePressEvent(self, QMouseEvent):
@@ -248,7 +248,7 @@ class WindowGUI(QWidget):
                 win32functions.GetCursorPos(byref(self.mousePos_pointer))
                 beforeX = self.mousePos_pointer.x
                 beforeY = self.mousePos_pointer.y
-                time.sleep(0.01)  # 一旦止めないと不自然な挙動をする
+                # time.sleep(0.01)  # 一旦止めないと不自然な挙動をする
                 # ブラウザを開いていれば，URLからアカウントを一時保存
                 self.autoMemorize()
                 self.show()  # ウィンドウ表示
@@ -261,7 +261,7 @@ class WindowGUI(QWidget):
                 win32functions.GetCursorPos(byref(self.mousePos_pointer))
                 beforeX = self.mousePos_pointer.x
                 beforeY = self.mousePos_pointer.y
-                time.sleep(0.01)  # 一旦止めないと不自然な挙動をする
+                time_sleep(0.01)  # 一旦止めないと不自然な挙動をする
                 
                 # 開いているウィンドウのハンドル一覧を取得
                 windowHandles = self.getWindowHandles()
@@ -293,6 +293,8 @@ class WindowGUI(QWidget):
     
     # ブラウザで開いているURLからアカウントを取得して一時保存
     def autoMemorize(self):
+        # クリップボードのコピー内容を消去
+        clipboard.EmptyClipboard()
         # 開いているウィンドウのハンドル一覧を取得
         windowHandles = self.getWindowHandles()
         
@@ -301,17 +303,23 @@ class WindowGUI(QWidget):
             handle=windowHandles[0]
         )
         # Mozilla FirefoxからURL取得
-        if re.search('Mozilla Firefox', str(firstElememt)) is not None:
-            keyboard.send('ctrl+l+c')
-        # Google ChromeからURL取得
-        elif re.search('Google Chrome', str(firstElememt)) is not None:
-            keyboard.send('ctrl+l+c')
+        if re_search('Mozilla Firefox', str(firstElememt)) is not None:
+            keyboard.send('ctrl+l,shift,ctrl+c')
+        elif re_search('Google Chrome', str(firstElememt)) is not None:
+            keyboard.send('ctrl+l,shift,ctrl+c')
         else:
             # 対応ブラウザでない場合は取得中止
             return
-        
+        time_sleep(0.1)  # 止めないとコピーが間に合わない
+        # クリップボードが空なら中止(フォーマットが取得されないことで判定)
+        if clipboard.GetClipboardFormats() == []:
+            return
         # クリップボードにコピーしたURLを取得
         copiedURL = clipboard.GetData()
+        # print(copiedURL)
+        # 何もコピーされていないなら中止
+        if len(copiedURL) == 0:
+            return
         URL_pattern = []
         # URL文字数を30から順に区切る
         if len(copiedURL) >= 15:
@@ -324,9 +332,7 @@ class WindowGUI(QWidget):
             URL_pattern.append(copiedURL[0:15])
         else:
             URL_pattern.append(copiedURL)
-        # 何もコピーされていないなら中止
-        if len(URL_pattern) == 0:
-            return
+        
         # URL文字数を30,25,20,15の順に減らしながら，含まれるアカウントを探す
         # 該当アカウントが1つだけならユーザID/Mailとパスワードを取得
         for i in range(len(URL_pattern)):
@@ -344,12 +350,18 @@ class WindowGUI(QWidget):
     def getWindowHandles(self) -> list:
         windowList = findwindows.find_windows()  # ウィンドウのハンドル値
         windowHandles = []  # windowListから余計なウィンドウを省いたリスト
-        for i in range(len(windowList)):
+        # 先頭5個までのウィンドウだけ扱う
+        if len(windowList) > 5:
+            num = 5
+        else:
+            num = len(windowList)
+        # print('##########################################')
+        for i in range(num):
             element = findwindows.find_element(
                 handle=windowList[i])
             # title='' or 'None'のウィンドウをリストから除外
-            if re.search('\'\'', str(element)) is None \
-                    and re.search('None', str(element)) is None:
+            if re_search('\'\'', str(element)) is None \
+                    and re_search('None', str(element)) is None:
                 windowHandles.append(windowList[i])
                 # print(str(i) + ':' + str(element))  # debug
         return windowHandles
@@ -358,20 +370,20 @@ class WindowGUI(QWidget):
     def exitKeasy(self):
         self.tray.hide()  # 通知領域にアイコンだけ残らないようにする
         # 復号化された状態のDBを削除
-        if os.path.exists('./keasy.db'):
-            os.remove('./keasy.db')
+        if os_path.exists('./keasy.db'):
+            os_remove('./keasy.db')
         sys.exit()
     
     # アプリ内の表示フォント
     def fontSetter(self, txt):
         try:
             # Windowsの場合
-            if os.name == 'nt':
+            if os_name == 'nt':
                 txt.setStyleSheet(
                     'font-family:MS Gothic;'
                     'font-size:14px;')
             # Macの場合？
-            if os.name == 'posix':
+            if os_name == 'posix':
                 txt.setStyleSheet(
                     'font-family:Monospace;'
                     'font-size:14px;')
@@ -444,7 +456,7 @@ class WindowGUI(QWidget):
             commandBar = QHBoxLayout()
             self.console = QLineEdit()
             self.console.setMaxLength(60)
-            if os.name == 'nt':
+            if os_name == 'nt':
                 self.console.setStyleSheet(
                     'font-family:MS Gothic;'
                     'font-size:18px;'
@@ -453,7 +465,7 @@ class WindowGUI(QWidget):
                     'border-style:solid;'
                     'border-width:1px;'
                     'border-color:rgb(0,150,0);')
-            if os.name == 'posix':
+            if os_name == 'posix':
                 self.console.setStyleSheet(
                     'font-family:Monospace;'
                     'font-size:18px;'
