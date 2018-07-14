@@ -2,14 +2,14 @@
 from CommandEvents import CommandEvents
 from TimerThread import TimerThread
 import sys
-from os import path as os_path,remove as os_remove,name as os_name
+from os import path as os_path, remove as os_remove, name as os_name
 from time import sleep as time_sleep
 from re import search as re_search
 import traceback
 from ctypes.wintypes import POINT
 from ctypes import byref
 # Keasy uses pywinauto ver.0.6.3.
-from pywinauto import findwindows, clipboard
+from pywinauto import findwindows, clipboard, keyboard as pywinauto_keyboard
 from pywinauto.mouse import win32functions, move
 from pywinauto.controls.common_controls import hwndwrapper
 # Keasy uses keyboard ver.0.11.0.
@@ -55,10 +55,8 @@ class WindowGUI(QWidget):
         # グローバルホットキーに反応 ===========================
         # 同じキーを押し続けると連続発動するので，
         # trigger_on release:Trueによって離すまで発動を止める
-        keyboard.add_hotkey('ctrl', lambda: self.press_Ctrl(),
-                            trigger_on_release=True)
-        keyboard.add_hotkey('shift', lambda: self.press_Shift(),
-                            trigger_on_release=True)
+        keyboard.hook_key('ctrl', self.press_Ctrl)
+        keyboard.hook_key('shift', self.press_Shift)
         keyboard.add_hotkey('ctrl+shift,ctrl+shift',
                             lambda: self.autoComplete_single(),
                             trigger_on_release=True)
@@ -75,29 +73,33 @@ class WindowGUI(QWidget):
             title='Keasy', class_name='Qt5QWindowIcon')
         self.thisWindowWrapper = hwndwrapper.HwndWrapper(self.thisHandle)
     
+    # Ctrlが押された場合
     def press_Ctrl(self):
         if keyboard.is_pressed('shift'):
             return
-        
         if self.pressedCtrl:
             self.appShow_or_Hide()
+            self.pressedCtrl = False
         else:
             self.pressedCtrl = True
             self.timerThread.timer_ctrl()
     
-    def timeout_Ctrl(self):
-        self.pressedCtrl = False
-    
+    # Shiftが押された場合
     def press_Shift(self):
         if keyboard.is_pressed('ctrl'):
             return
-        
         if self.pressedShift:
             self.autoComplete()
+            self.pressedShift = False
         else:
             self.pressedShift = True
             self.timerThread.timer_shift()
     
+    # Ctrl入力フラグを一定時間後に消す
+    def timeout_Ctrl(self):
+        self.pressedCtrl = False
+    
+    # Shift入力フラグを一定時間後に消す
     def timeout_Shift(self):
         self.pressedShift = False
     
@@ -183,10 +185,11 @@ class WindowGUI(QWidget):
             # IDorMailが取得されているなら自動入力
             if IDorMail == "":
                 return
-            
-            keyboard.write(IDorMail)
-            keyboard.send('tab')
-            keyboard.write(passWord)
+            # Windowsの場合
+            if os_name == 'nt':
+                pywinauto_keyboard.SendKeys(
+                    IDorMail + '{TAB}' + passWord, pause=0
+                )
         except:
             traceback.print_exc()
     
@@ -201,11 +204,13 @@ class WindowGUI(QWidget):
             # IDorMailが取得されているなら，片方を自動入力
             if IDorMail == "":
                 return
-            
+            # 0:ID/Mail, 1:passWord
             if self.cmdEvt.completeTarget == 0:
-                keyboard.write(IDorMail)
+                if os_name == 'nt':
+                    pywinauto_keyboard.SendKeys(IDorMail, pause=0)
             else:
-                keyboard.write(passWord)
+                if os_name == 'nt':
+                    pywinauto_keyboard.SendKeys(passWord, pause=0)
         except:
             traceback.print_exc()
     

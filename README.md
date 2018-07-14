@@ -8,6 +8,7 @@ This is alpha version. Almost functions work only on Windows now yet.
 * [Run](#Run)
 * [Usage](#Usage)
 * [Contribution](#Contribution)
+* [Release note](#Release-note)
 
 
 <a id = "What-is-convenience-of-Keasy?"></a>
@@ -60,11 +61,11 @@ For example if you use python3.6...
 You have to install libraries (PyQt5.9, keyboard0.11.0, and also) used by Keasy into your python3.
 
 
-## Use with exe file on Windows
+## Use with exe for Windows x86-64
 Download .exe file from following link.  
 I checked the operation only on Windows10 x86-64.
 
-* [Keasy version1.0](https://drive.google.com/file/d/1KXHCws-_XuXJoT1U_JjpvC_yEFEvdtGI/view?usp=sharing) ( 36MB )
+<b>[Keasy version1.2](https://drive.google.com/file/d/188JIL3ilXKPwrPH_ubzWMbuKHBilTDN7/view?usp=sharing) ( 36MB )</b>
 
 
 ## Build Keasy yourself for Windows
@@ -308,3 +309,18 @@ It switches data to user-name or password every time press this hotkey.
 Pull requests and issues are very welcome.
 
 I would like to make Keasy a convenience GUI password manager which able to run on multi platform with command line base.
+
+
+<a id = "Release-note"></a>
+# Release note
+## version 1.x
+
+* 1.2  
+Fixed the fatal bug that looping auto-input.  
+It because that press Shift key automatically in order to input uppercase.
+
+* 1.1  
+Fixed Auto-Memorize by adding delay time.
+
+* 1.0  
+Original.
