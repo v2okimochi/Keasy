@@ -55,8 +55,10 @@ class WindowGUI(QWidget):
         # グローバルホットキーに反応 ===========================
         # 同じキーを押し続けると連続発動するので，
         # trigger_on release:Trueによって離すまで発動を止める
-        keyboard.hook_key('ctrl', self.press_Ctrl)
-        keyboard.hook_key('shift', self.press_Shift)
+        keyboard.add_hotkey('ctrl', self.onPressCtrl_global,
+                            trigger_on_release=True)
+        keyboard.add_hotkey('shift', self.onPressShift_global,
+                            trigger_on_release=True)
         keyboard.add_hotkey('ctrl+shift,ctrl+shift',
                             lambda: self.autoComplete_single(),
                             trigger_on_release=True)
@@ -74,7 +76,7 @@ class WindowGUI(QWidget):
         self.thisWindowWrapper = hwndwrapper.HwndWrapper(self.thisHandle)
     
     # Ctrlが押された場合
-    def press_Ctrl(self):
+    def onPressCtrl_global(self):
         if keyboard.is_pressed('shift'):
             return
         if self.pressedCtrl:
@@ -85,7 +87,7 @@ class WindowGUI(QWidget):
             self.timerThread.timer_ctrl()
     
     # Shiftが押された場合
-    def press_Shift(self):
+    def onPressShift_global(self):
         if keyboard.is_pressed('ctrl'):
             return
         if self.pressedShift:
@@ -109,7 +111,7 @@ class WindowGUI(QWidget):
             return os_path.join(sys._MEIPASS, relative_path)
         return os_path.join(os_path.abspath("."), relative_path)
     
-    # ウィンドウの左クリックで発動
+    # ウィンドウを左クリックすると発動
     def mousePressEvent(self, QMouseEvent):
         """
         :type QMouseEvent:PyQt5.QtGui.QMouseEvent.QMouseEvent
@@ -122,7 +124,7 @@ class WindowGUI(QWidget):
         except:
             traceback.print_exc()
     
-    # ウィンドウのマウスドラッグ（左クリックしたままマウス移動）で発動
+    # ウィンドウをマウスドラッグ（左クリックしたままマウス移動）すると発動
     def mouseMoveEvent(self, QMouseEvent):
         """
         :type QMouseEvent:PyQt5.QtGui.QMouseEvent.QMouseEvent
@@ -144,7 +146,7 @@ class WindowGUI(QWidget):
         diffPos_y = self.prevY - currentY
         self.move(appPos_x - diffPos_x, appPos_y - diffPos_y)
     
-    # キー入力判定
+    # ウィンドウにフォーカスしている時のキー入力判定
     def keyPressEvent(self, evt):
         try:
             # Tabキーが押された＆Ctrl,Shift,Altのどれも押されていない場合，

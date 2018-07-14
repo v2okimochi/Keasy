@@ -65,7 +65,7 @@ You have to install libraries (PyQt5.9, keyboard0.11.0, and also) used by Keasy 
 Download .exe file from following link.  
 I checked the operation only on Windows10 x86-64.
 
-<b>[Keasy version1.2](https://drive.google.com/file/d/188JIL3ilXKPwrPH_ubzWMbuKHBilTDN7/view?usp=sharing) ( 36MB )</b>
+<b>[Keasy version1.3](https://drive.google.com/file/d/19W5KIh9fI0pHHznMptPDFZrOX1z6YHRt/view?usp=sharing) ( 37MB )</b>
 
 
 ## Build Keasy yourself for Windows
@@ -314,6 +314,9 @@ I would like to make Keasy a convenience GUI password manager which able to run 
 <a id = "Release-note"></a>
 # Release note
 ## version 1.x
+
+* 1.3
+Fixed a looping that it is working during keep press ctrl/shift.
 
 * 1.2  
 Fixed the fatal bug that looping auto-input.  
