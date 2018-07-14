@@ -133,6 +133,8 @@ pyinstaller .\Keasy.spec
 <a id = "Usage"></a>
 
 # Usage
+Demo -> [Qiita - sh141:"GUIなのにCLIなパスワードマネージャを作った"](https://qiita.com/sh141/items/9de1923373d2033c0911)
+
 ## Console-commands
 * [exit](#exit)
 * [find [input-text]](#find)
@@ -315,7 +317,7 @@ I would like to make Keasy a convenience GUI password manager which able to run 
 # Release note
 ## version 1.x
 
-* 1.3
+* 1.3  
 Fixed a looping that it is working during keep press ctrl/shift.
 
 * 1.2  
