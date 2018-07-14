@@ -88,7 +88,7 @@ You should add icon's path(icon name, absolute path to icon) to "Keasy.spec" in 
 a.datas += [('icon.ico', '[absolute directory path to icon.ico]\icon.ico', 'DATA')]
 ```
 
-For example following.  
+For example following (If your working directory is "Keasy/").  
 Please change path according to your working directory.
 
 ```python:Keasy.spec
@@ -98,7 +98,7 @@ block_cipher = None
 
 
 a = Analysis(['Keasy.py'],
-             pathex=['C:\\Windows\\WinSxS\\amd64_avg.vc140.crt_f92d94485545da78_14.0.24210.0_none_69fa0197d9b096ae\\', 'D:\\[your working directory]]\\Keasy'],
+             pathex=['C:\\Windows\\WinSxS\\amd64_avg.vc140.crt_f92d94485545da78_14.0.24210.0_none_69fa0197d9b096ae\\', '[absolute path to your working directory]\\Keasy'],
              binaries=[],
              datas=[],
              hiddenimports=['comtypes.gen._944DE083_8FB8_45CF_BCB7_C477ACB2F897_0_1_0', 'comtypes.gen.UIAutomationClient'],
@@ -108,7 +108,7 @@ a = Analysis(['Keasy.py'],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              cipher=block_cipher)
-a.datas += [('icon.ico', '[absolute directory path to icon.ico]\icon.ico', 'DATA')]
+a.datas += [('icon.ico', '[absolute path to your working directory]\Keasy\icon.ico', 'DATA')]
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
@@ -231,7 +231,7 @@ $ delete GitHub sh141
 <a id = "master"></a>
 
 ### master  
-change master-password.
+Change master-password.
 
 
 <a id = "Keyboard-shortcuts"></a>
