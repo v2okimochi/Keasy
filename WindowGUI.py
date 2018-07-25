@@ -35,6 +35,7 @@ class WindowGUI(QWidget):
         self.timerThread.CtrlTimeoutSignal.connect(self.timeout_Ctrl)
         self.timerThread.ShiftTimeoutSignal.connect(self.timeout_Shift)
         self.appTitle = 'Keasy'
+        self.version = '1.5'
         self.icon_path = 'icon.ico'
         self.command_maxLengthTxt = '60字まで'
         self.tray_toolchipTxt = 'Ctrlキーを2回押すことで展開します'
@@ -47,6 +48,7 @@ class WindowGUI(QWidget):
         self.setWindowIcon(QIcon(self.resource_path(self.icon_path)))
         self.setMinimumSize(600, 500)
         self.setMaximumSize(1200, 800)
+        self.savedMyGeometry = None  # タスクトレイ格納時のウィンドウサイズ
         self.setStyleSheet(
             'color:rgb(200,200,200);'
             'background:rgb(50,50,50);')
@@ -171,10 +173,19 @@ class WindowGUI(QWidget):
     
     # autoComplete_singleで自動入力する対象を切り替える
     def switchMemorize(self):
-        if self.cmdEvt.completeTarget == 0:
-            self.cmdEvt.completeTarget = 1
-        else:
-            self.cmdEvt.completeTarget = 0
+        try:
+            if self.cmdEvt.completeTarget == 0:
+                self.cmdEvt.completeTarget = 1
+            else:
+                self.cmdEvt.completeTarget = 0
+            if os_name == 'nt':
+                mes = ['ユーザID/Mail', 'パスワード']
+                self.tray.showMessage(
+                    mes[self.cmdEvt.completeTarget] + 'を自動入力できます',
+                    'Ctrl+(Shift -> Shift)', msecs=0
+                )
+        except:
+            traceback.print_exc()
     
     # ユーザID/Mailとパスワードの自動入力
     def autoComplete(self):
@@ -259,6 +270,9 @@ class WindowGUI(QWidget):
                 # ブラウザを開いていれば，URLからアカウントを一時保存
                 self.autoMemorize()
                 self.show()  # ウィンドウ表示
+                # トレイ格納時のウィンドウサイズに戻す
+                if self.savedMyGeometry != None:
+                    self.restoreGeometry(self.savedMyGeometry)
                 self.thisWindowWrapper.set_focus()  # アクティブにする＋フォーカスする
                 move(coords=(beforeX, beforeY))  # マウスを移動し直す
                 self.console.setFocus()  # コンソールにフォーカス(カーソル表示)
@@ -292,7 +306,8 @@ class WindowGUI(QWidget):
                         windowHandles[(len(windowHandles) - 1) - 1]
                     )
                     previousWindow.set_focus()  # 前ウィンドウにフォーカス
-                
+                # 格納時のウィンドウサイズを記憶
+                self.savedMyGeometry = self.saveGeometry()
                 self.hide()  # ウィンドウ非表示
                 move(coords=(beforeX, beforeY))  # マウスを移動し直す
         except:
@@ -317,7 +332,11 @@ class WindowGUI(QWidget):
         else:
             # 対応ブラウザでない場合は取得中止
             return
-        time_sleep(0.1)  # 止めないとコピーが間に合わない
+        # 0.5秒までの間にクリップボードにコピーされたら途中で抜ける
+        for t in range(5):
+            if clipboard.GetClipboardFormats() != []:
+                break
+            time_sleep(0.1)  # コピーが間に合わなければ0.1秒待つ
         # クリップボードが空なら中止(フォーマットが取得されないことで判定)
         if clipboard.GetClipboardFormats() == []:
             return
@@ -419,7 +438,7 @@ class WindowGUI(QWidget):
             icon = QPixmap(self.resource_path(self.icon_path)).scaled(30, 30)
             icon_area = QLabel()
             icon_area.setPixmap(icon)
-            title = QLabel(self.appTitle)
+            title = QLabel(self.appTitle + self.version)
             title.setStyleSheet('font-size:28px;')
             
             topBar.addWidget(icon_area)

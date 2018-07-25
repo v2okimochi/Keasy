@@ -197,6 +197,7 @@ class CommandEvents(QObject):
         # 空リストでないなら要素が入っているため判定はしない
         # 1文字列中に主コマンド・副コマンド群の形で入れる
         for i in range(len(checkedList)):
+            checkedList[i] = str(checkedList[i])
             if i == 0:
                 complementedText = checkedList[i]
             else:
@@ -214,6 +215,8 @@ class CommandEvents(QObject):
         if len(cmdList) < 2 or len(cmdList) > 3:
             return
         try:
+            for i in range(len(cmdList)):
+                cmdList[i] = str(cmdList[i])
             # serviceName入力時=================================
             serviceIDandName = self.complementServiceName(cmdList[1])
             if serviceIDandName == []:
@@ -224,7 +227,7 @@ class CommandEvents(QObject):
             # サービス名だけが入力されていた場合，
             # サービス名の削除確認
             if len(cmdList) == 2:
-                cmdList[1] = serviceName
+                cmdList[1] = str(serviceName)
                 complementedText = ' '.join(cmdList)
                 self.gui.changeConsoleText(complementedText)
                 return
@@ -242,7 +245,7 @@ class CommandEvents(QObject):
                 return
             
             IDorMail = AccountData[0]['userIDorMail']
-            cmdList[2] = IDorMail
+            cmdList[2] = str(IDorMail)
             complementedText = ' '.join(cmdList)
             self.gui.changeConsoleText(complementedText)
         except:
@@ -479,12 +482,14 @@ class CommandEvents(QObject):
             if re.search('　', cmdMain) != None:
                 self.gui.responseTxt.setText(
                     '全角文字の空白は入力できません')
+                self.gui.console.clear()
                 return
             elif len(cmdSub) > 0:
                 for i in range(len(cmdSub)):
                     if re.search('　', cmdSub[i]) != None:
                         self.gui.responseTxt.setText(
                             '全角文字の空白は入力できません')
+                        self.gui.console.clear()
                         return
             
             # exitコマンドならアプリ終了させる
@@ -525,7 +530,8 @@ class CommandEvents(QObject):
                         'コマンドが違います：' + complementedCmd
                     )
                     # コンソール文字を除去＆コマンド履歴を表示
-                    self.clearConsole(receivedCmd)
+                    self.gui.console.clear()
+                    self.gui.historyTxt.setText(complementedCmd)
                     return
             
             # modeによって処理を変える=======================
@@ -533,8 +539,11 @@ class CommandEvents(QObject):
                 self.noneMode()
             elif self.currentMode == self.mode_confirmMaster:
                 self.confirmMasterPassWord(cmdMain, cmdSub)
+            # パスワード入力時のみ，コマンド履歴を表示しない
             elif self.currentMode == self.mode_auth:
                 self.authenticationMode(cmdMain, cmdSub)
+                self.gui.console.clear()
+                return
             elif self.currentMode == self.mode_find:
                 self.cmdAction_findMode(cmdSub)
             elif self.currentMode == self.mode_add:
@@ -550,17 +559,13 @@ class CommandEvents(QObject):
             else:
                 pass
             # コンソール文字を除去＆コマンド履歴を表示
-            self.clearConsole(receivedCmd)
+            self.gui.console.clear()
+            self.gui.historyTxt.setText(receivedCmd)
             # 現在のモードを表示
             self.gui.dispMyMode(self.currentMode)
         
         except:
             traceback.print_exc()
-    
-    # コンソールの文字除去とコマンド履歴の表示
-    def clearConsole(self, lastCmd):
-        self.gui.console.clear()  # コンソールの文字を消去
-        self.gui.historyTxt.setText(lastCmd)  # 最後に打ったコマンドを表示
     
     # 正規表現として正しければTrueを，誤っていればFalseを返す
     def re_check(self, string):
@@ -575,7 +580,7 @@ class CommandEvents(QObject):
     # 予測できなければ，引数で受け取ったコマンドをそのまま返す
     def complementCommand(self, cmd):
         count = False
-        result = cmd
+        result = str(cmd)
         # 正規表現が正しければ補完処理へ，誤っていれば補完中止
         if self.re_check(cmd):
             pass
@@ -816,10 +821,10 @@ class CommandEvents(QObject):
                          Accounts[i][0]['remarks'], loginURL]
                     )))
             
-            if self.displayableList:
-                # print('displayList: ', end='')
-                # print(self.displayableList)
-                self.displayServices(self.displayableList)
+            # if self.displayableList:
+            # print('displayList: ', end='')
+            # print(self.displayableList)
+            self.displayServices(self.displayableList)
             
             # serviceNameがいくつ見つかったか応答
             self.response(
@@ -838,6 +843,9 @@ class CommandEvents(QObject):
             # 1行0列からやり直す
             self.gui.resultTable.setRowCount(1)
             self.gui.resultTable.setColumnCount(0)
+            # 表示すべきアカウントが無ければ中止
+            if foundAccounts == []:
+                return
             
             # 1行目header ============================
             # key:辞書キー名，value:キーに対応する値
@@ -858,6 +866,7 @@ class CommandEvents(QObject):
                 for col, (key, value) in enumerate(foundAccounts[row].items()):
                     # 同じserviceNameは連続で表示せず，
                     # 違うserviceNameに変わった時に1度だけ表示させる
+                    value = str(value)
                     if key == 'serviceName':
                         if value == serviceName:
                             pass
@@ -872,7 +881,7 @@ class CommandEvents(QObject):
                         if value == searchWord:
                             pass
                         else:
-                            searchWord = value
+                            searchWord = str(value)
                             self.gui.resultTable.setItem(
                                 row + 1, col, QTableWidgetItem(value)
                             )
@@ -882,7 +891,7 @@ class CommandEvents(QObject):
                         if value == loginURL:
                             pass
                         else:
-                            loginURL = value
+                            loginURL = str(value)
                             self.gui.resultTable.setItem(
                                 row + 1, col, QTableWidgetItem(value)
                             )
@@ -1333,8 +1342,8 @@ class CommandEvents(QObject):
         self.editableRecord = dict(zip(
             ['serviceID', 'serviceName', 'searchWord', 'LoginURL',
              'accountID', 'userIDorMail', 'passWord', 'remarks'],
-            [ServiceID, ServiceName, SearchWord, LoginURL,
-             AccountNum, IDorMail, PassWord, Remarks]
+            [ServiceID, str(ServiceName), str(SearchWord), str(LoginURL),
+             AccountNum, str(IDorMail), str(PassWord), str(Remarks)]
         ))
         # print('editableRecord: ', end='')
         # print(self.editableRecord)
@@ -1622,7 +1631,7 @@ class CommandEvents(QObject):
                 return
             
             serviceID = serviceIDandName[0]
-            serviceName = serviceIDandName[1]
+            serviceName = str(serviceIDandName[1])
             # サービス名だけが入力されていた場合，
             # サービス名の削除確認
             if len(cmdSub) == 1:
@@ -1653,13 +1662,14 @@ class CommandEvents(QObject):
                 )
                 return
             
-            IDorMail = AccountData[0]['userIDorMail']
+            IDorMail = str(AccountData[0]['userIDorMail'])
             # 削除するデータの場所(int)を一次記憶
             self.deletableAccountNum = AccountNumber
             self.currentFlag = self.flag_ID_or_Mail
             self.response(
-                'ユーザID/Mail "' + IDorMail + '"のアカウントを削除します．\n'
-                                            '実行する場合は"yes"，中止する場合は"no"を入力してください．'
+                'ユーザID/Mail "' + IDorMail +
+                '"のアカウントを削除します．\n'
+                '実行する場合は"yes"，中止する場合は"no"を入力してください．'
             )
             
             # そのサービス名に紐付いたアカウント数が1つだけだったら，

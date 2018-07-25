@@ -65,6 +65,8 @@ You have to install libraries (PyQt5.9, keyboard0.11.0, and also) used by Keasy 
 Download .exe file from following link.  
 I checked the operation only on Windows10 x86-64.
 
+<b>[Keasy version1.5](https://drive.google.com/file/d/1J8vhSY8YgEksomWEasVw7b949v-8BWtF/view?usp=sharing) ( 37MB )</b>
+
 <b>[Keasy version1.3](https://drive.google.com/file/d/19W5KIh9fI0pHHznMptPDFZrOX1z6YHRt/view?usp=sharing) ( 37MB )</b>
 
 
@@ -285,9 +287,7 @@ Actually, Keasy do "ctrl+l (focus to address bar)"->"ctrl+c (copy URL)" using yo
 
 <a id = "ctrl-shift-ctrl-shift"></a>
 
-### ctrl + shift -> ctrl + shift
-You can also use it by ctrl+(shift->shift).
-
+### ctrl + ( shift -> shift )
 Input user-name or password to website automatically.  
 The difference from "shift -> shift" is that only input one data.
 
@@ -300,7 +300,7 @@ To switch data, you should use "ctrl+space".
 Switch data for input.
 
 At first you can input user-name automatically.  
-If you want to input password, press "ctrl+shift -> ctrl+shift" then switch data for input from user-name to password.
+If you want to input password, press "ctrl+(shift->shift)" then switch data for input from user-name to password.
 
 It switches data to user-name or password every time press this hotkey.
 
@@ -316,6 +316,16 @@ I would like to make Keasy a convenience GUI password manager which able to run 
 <a id = "Release-note"></a>
 # Release note
 ## version 1.x
+
+* 1.5
+Added version name on Title.
+Fixed to hide command-history( inputting master-password ) at auth-mode.
+At delete-mode and edit-mode, fixed to run Tab-complement also by only figure.
+At find-mode, fixed to show service-name, search-word, loginURL and command-history also by only figure. And fixed to clear displayed if not found accounts.
+
+* 1.4
+Added balloon messages for switching target of Auto-input-single.
+Fixed to keep window size before Keasy is hidden.
 
 * 1.3  
 Fixed a looping that it is working during keep press ctrl/shift.
