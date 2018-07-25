@@ -318,13 +318,14 @@ I would like to make Keasy a convenience GUI password manager which able to run 
 ## version 1.x
 
 * 1.5  
-Added version name on Title.
-Fixed to hide command-history( inputting master-password ) at auth-mode.
-At delete-mode and edit-mode, fixed to run Tab-complement also by only figure.
-At find-mode, fixed to show service-name, search-word, loginURL and command-history also by only figure. And fixed to clear displayed if not found accounts.
+Added version name on Title.  
+Fixed to hide command-history( inputting master-password ) at auth-mode.  
+At delete-mode and edit-mode, fixed to run Tab-complement also by only figure.  
+At find-mode, fixed to show service-name, search-word, loginURL and command-history also by only figure.  
+And fixed to clear displayed if not found accounts.
 
 * 1.4  
-Added balloon messages for switching target of Auto-input-single.
+Added balloon messages for switching target of Auto-input-single.  
 Fixed to keep window size before Keasy is hidden.
 
 * 1.3  
