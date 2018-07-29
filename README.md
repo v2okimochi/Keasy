@@ -5,7 +5,7 @@ This is alpha version. Almost functions work only on Windows now yet.
 
 * [What is convenience of Keasy?](#What-is-convenience-of-Keasy?)
 * [Structure](#Structure)
-* [Run](#Run)
+* [Run / Download](#Run)
 * [Usage](#Usage)
 * [Contribution](#Contribution)
 * [Release note](#Release-note)
@@ -50,7 +50,7 @@ And Keasy delete "keasy.db" before quit itself.
 
 <a id = "Run"></a>
 
-# Run
+# Run / Download
 ## Use with Python3
 You should run Keasy.py to use Keasy application.  
 For example if you use python3.6...
@@ -61,13 +61,11 @@ For example if you use python3.6...
 You have to install libraries (PyQt5.9, keyboard0.11.0, and also) used by Keasy into your python3.
 
 
-## Use with exe for Windows x86-64
-Download .exe file from following link.  
+## Download for Windows x86-64
+You can download latest exe file from following link.  
 I checked the operation only on Windows10 x86-64.
 
-<b>[Keasy version1.5](https://drive.google.com/file/d/1J8vhSY8YgEksomWEasVw7b949v-8BWtF/view?usp=sharing) ( 37MB )</b>
-
-<b>[Keasy version1.3](https://drive.google.com/file/d/19W5KIh9fI0pHHznMptPDFZrOX1z6YHRt/view?usp=sharing) ( 37MB )</b>
+<b>[Keasy version1.6](https://drive.google.com/file/d/1uNQQVXg3fAKA-C0ubPqFiUUjlTB9GSQu/view?usp=sharing) ( 37MB )</b>
 
 
 ## Build Keasy yourself for Windows
@@ -316,6 +314,10 @@ I would like to make Keasy a convenience GUI password manager which able to run 
 <a id = "Release-note"></a>
 # Release note
 ## version 1.x
+
+* 1.6  
+Fixed that it still show mode "auth" after finish auth-mode.  
+Fixed to clear console and show command-history at "show" and "hide".
 
 * 1.5  
 Added version name on Title.  

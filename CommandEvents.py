@@ -504,11 +504,13 @@ class CommandEvents(QObject):
                 # show/hideコマンドならパスワード表示の処理へ
                 if complementedCmd == self.cmd_show:
                     self.cmdAction_ShowPassword(cmdSub)
-                    self.clearConsole(receivedCmd)
+                    self.gui.console.clear()
+                    self.gui.historyTxt.setText(complementedCmd)
                     return
                 elif complementedCmd == self.cmd_hide:
                     self.cmdAction_HidePassword(cmdSub)
-                    self.clearConsole(receivedCmd)
+                    self.gui.console.clear()
+                    self.gui.historyTxt.setText(complementedCmd)
                     return
                 # 他のコマンドならモード変更
                 elif complementedCmd == self.cmd_find:
@@ -543,6 +545,7 @@ class CommandEvents(QObject):
             elif self.currentMode == self.mode_auth:
                 self.authenticationMode(cmdMain, cmdSub)
                 self.gui.console.clear()
+                self.gui.dispMyMode(self.currentMode)  # 現在のモードを表示
                 return
             elif self.currentMode == self.mode_find:
                 self.cmdAction_findMode(cmdSub)
@@ -561,8 +564,7 @@ class CommandEvents(QObject):
             # コンソール文字を除去＆コマンド履歴を表示
             self.gui.console.clear()
             self.gui.historyTxt.setText(receivedCmd)
-            # 現在のモードを表示
-            self.gui.dispMyMode(self.currentMode)
+            self.gui.dispMyMode(self.currentMode)  # 現在のモードを表示
         
         except:
             traceback.print_exc()
