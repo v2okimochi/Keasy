@@ -35,7 +35,7 @@ class WindowGUI(QWidget):
         self.timerThread.CtrlTimeoutSignal.connect(self.timeout_Ctrl)
         self.timerThread.ShiftTimeoutSignal.connect(self.timeout_Shift)
         self.appTitle = 'Keasy'
-        self.version = '1.6'
+        self.version = '1.7'
         self.icon_path = 'icon.ico'
         self.command_maxLengthTxt = '60字まで'
         self.tray_toolchipTxt = 'Ctrlキーを2回押すことで展開します'
@@ -458,7 +458,8 @@ class WindowGUI(QWidget):
                 'add  : アカウントを登録します\n'
                 'edit [サービス名] [ユーザID/Mail] [変更したい情報の種類] : '
                 'アカウントを編集します\n'
-                'delete [サービス名] [ユーザID/Mail] : アカウントを削除します')
+                'delete [サービス名] [ユーザID/Mail] : アカウントを削除します\n'
+                'master : マスターパスワードを変更します')
             self.fontSetter(explainTxt)
             explainBar.addWidget(explainTxt)
             
