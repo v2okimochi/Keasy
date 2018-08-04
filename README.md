@@ -1,4 +1,4 @@
-# Keasy - Password Manager
+# <img src="icon.ico" width=50x50> Keasy - Password Manager
 Keasy is open source GUI password manager. You can use it only by command which CLI-like.
 
 This is alpha version. Almost functions work only on Windows now yet.
