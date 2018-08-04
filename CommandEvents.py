@@ -155,15 +155,15 @@ class CommandEvents(QObject):
                 and self.currentFlag == self.flag_PassWord:
             self.currentFlag = self.flag_RandomPassWord
             self.response(textForRandomPassWord)
+        # edit mode: password入力時
+        elif self.currentMode == self.cmd_edit and \
+                self.currentFlag == self.flag_PassWord:
+            # ランダムパスワード生成へ移行
+            self.currentFlag = self.flag_RandomPassWord
+            self.response(textForRandomPassWord)
         # editが主コマンドに入力されている場合
         elif complementedCmd == self.cmd_edit:
-            # パスワード入力時ならランダムパスワード生成へ移行
-            if self.currentFlag == self.flag_PassWord:
-                self.currentFlag = self.flag_RandomPassWord
-                self.response(textForRandomPassWord)
-            # それ以外なら入力文字の補完
-            else:
-                self.tabComplement_edit(cmdList)
+            self.tabComplement_edit(cmdList)  # 入力文字の補完
         # deleteが主コマンドに入力されている場合
         elif complementedCmd == self.cmd_delete:
             self.tabComplement_delete(cmdList)
@@ -1547,6 +1547,12 @@ class CommandEvents(QObject):
             # if didn't create random password, stop this method
             if randomizedLetter == '':
                 return
+            
+            AccountNum = self.editableRecord['accountID']
+            newPassWord = randomizedLetter
+            # アカウント番号からsearchWordを特定して変更
+            self.db.editPassWord(AccountNum, newPassWord)
+            self.encryptDB()  # DB暗号化
             
             # edit mode修了
             self.currentMode = self.mode_find
