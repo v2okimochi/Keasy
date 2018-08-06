@@ -65,7 +65,7 @@ You have to install libraries (PyQt5.9, keyboard0.11.0, and also) used by Keasy 
 You can download latest exe file from following link.  
 I checked the operation only on Windows10 x86-64.
 
-<b>[Keasy version1.8](https://drive.google.com/file/d/1hY-UqYNc4eq82Cd8bWAlNxGnoVC22dI-/view?usp=sharing) ( 37MB )</b>
+<b>[Keasy version1.9](https://drive.google.com/file/d/1GCJ-UKsJlgPuOOKeXCET9jnfxnSgjcuk/view?usp=sharing) ( 37MB )</b>
 
 
 ## Build Keasy yourself for Windows
@@ -314,6 +314,9 @@ I would like to make Keasy a convenience GUI password manager which able to run 
 <a id = "Release-note"></a>
 # Release note
 ## version 1.x
+
+* 1.9  
+Fixed fatal bug that it freezes when coming out from tray because it has resized after coming out.
 
 * 1.8  
 Added function to create random password by tab key at edit-mode.

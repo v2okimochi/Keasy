@@ -35,7 +35,7 @@ class WindowGUI(QWidget):
         self.timerThread.CtrlTimeoutSignal.connect(self.timeout_Ctrl)
         self.timerThread.ShiftTimeoutSignal.connect(self.timeout_Shift)
         self.appTitle = 'Keasy'
-        self.version = '1.8'
+        self.version = '1.9'
         self.icon_path = 'icon.ico'
         self.command_maxLengthTxt = '60字まで'
         self.tray_toolchipTxt = 'Ctrlキーを2回押すことで展開します'
@@ -269,10 +269,10 @@ class WindowGUI(QWidget):
                 # time.sleep(0.01)  # 一旦止めないと不自然な挙動をする
                 # ブラウザを開いていれば，URLからアカウントを一時保存
                 self.autoMemorize()
-                self.show()  # ウィンドウ表示
                 # トレイ格納時のウィンドウサイズに戻す
                 if self.savedMyGeometry != None:
                     self.restoreGeometry(self.savedMyGeometry)
+                self.show()  # ウィンドウ表示
                 self.thisWindowWrapper.set_focus()  # アクティブにする＋フォーカスする
                 move(coords=(beforeX, beforeY))  # マウスを移動し直す
                 self.console.setFocus()  # コンソールにフォーカス(カーソル表示)
