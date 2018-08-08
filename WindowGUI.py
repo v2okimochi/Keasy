@@ -35,7 +35,7 @@ class WindowGUI(QWidget):
         self.timerThread.CtrlTimeoutSignal.connect(self.timeout_Ctrl)
         self.timerThread.ShiftTimeoutSignal.connect(self.timeout_Shift)
         self.appTitle = 'Keasy'
-        self.version = '1.9'
+        self.version = '1.10'
         self.icon_path = 'icon.ico'
         self.command_maxLengthTxt = '60字まで'
         self.tray_toolchipTxt = 'Ctrlキーを2回押すことで展開します'
@@ -365,11 +365,12 @@ class WindowGUI(QWidget):
             # print(URL_pattern[i])
             IDandPass = self.cmdEvt.autoFindByURL(URL_pattern[i])
             if IDandPass != {}:
+                serviceName = IDandPass['Service']
                 IDorMail = IDandPass['ID']
                 passWord = IDandPass['Pass']
                 # ユーザID/Mailとパスワードの一時保存
                 # つまり自動memorize
-                self.cmdEvt.setMemorize(IDorMail, passWord)
+                self.cmdEvt.setMemorize(serviceName, IDorMail, passWord)
                 break
     
     # 開いているウィンドウのハンドルを最前面から順に取得

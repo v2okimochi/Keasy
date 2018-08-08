@@ -110,11 +110,12 @@ class CommandEvents(QObject):
         return self.MemorizeDict
     
     # URLから予測できたユーザID/Mailとパスワードを一時保存
-    def setMemorize(self, ID, Pass):
-        self.MemorizeDict['user'] = ID
-        self.MemorizeDict['pass'] = Pass
+    def setMemorize(self, Service: str, ID: str, Pass: str):
+        self.MemorizeDict['user'] = str(ID)
+        self.MemorizeDict['pass'] = str(Pass)
         self.response(
-            'URLから自動予測しました．\nユーザID/Mailはこれですか？: '
+            'URLから予測 -> '
+            + Service + ' : '
             + self.MemorizeDict['user'] +
             '\nShiftキーを2回押すことで自動入力できます．'
         )
@@ -1799,8 +1800,8 @@ class CommandEvents(QObject):
                 self.currentMode = self.mode_find
                 return
             
-            IDorMail = AccountData[0]['userIDorMail']
-            passWord = AccountData[0]['passWord']
+            IDorMail = str(AccountData[0]['userIDorMail'])
+            passWord = str(AccountData[0]['passWord'])
             # ユーザID/Mailとパスワードを一時記憶
             self.MemorizeDict['user'] = IDorMail
             self.MemorizeDict['pass'] = passWord

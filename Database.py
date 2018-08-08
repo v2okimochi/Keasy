@@ -354,7 +354,7 @@ class Database:
     # 引数のURLを使って，serviceテーブルからアカウント取得
     # 見つかったアカウントが1つだけだった場合のみ，
     # accountsテーブルからユーザID/Mailとパスワードを取得して
-    # 辞書型で['ID','Pass']を返す
+    # 辞書型で['Service','ID','Pass']を返す
     # アカウントが0か2以上なら空の辞書を返す
     def getIDandPassByURL(self, URL: str) -> dict:
         IDAndPass = {}
@@ -371,25 +371,32 @@ class Database:
                 serviceID_list.append(row[0])
             con.commit()
             # サービス名が1つだけ見つかったら，
-            # サービスIDからユーザID/Mailとパスワードを取得
+            # サービスIDからサービス名, ユーザID/Mail, パスワードを取得
             if len(serviceID_list) == 1:
+                accountData = []
+                cur.execute(
+                    "select service from %s where id = %s"
+                    % (self.services_table, serviceID_list[0])
+                )
+                for row in cur:
+                    serviceName = row[0]
                 cur.execute(
                     "select user,password from %s where service = %s"
                     % (self.accounts_table, serviceID_list[0])
                 )
-                IDandPass_list = []
                 for row in cur:
                     # 辞書型に変換
-                    IDandPass_list.append(dict(zip(
-                        ['userIDorMail', 'passWord'],
-                        [row[0], row[1]]
+                    accountData.append(dict(zip(
+                        ['serviceName', 'userIDorMail', 'passWord'],
+                        [serviceName, row[0], row[1]]
                     )))
                 # アカウントが1つだけ見つかったら，
                 # ユーザID/Mailとパスワードを返り値にする
-                if len(IDandPass_list) == 1:
+                if len(accountData) == 1:
                     IDAndPass = {
-                        'ID': IDandPass_list[0]['userIDorMail'],
-                        'Pass': IDandPass_list[0]['passWord']
+                        'Service': accountData[0]['serviceName'],
+                        'ID': accountData[0]['userIDorMail'],
+                        'Pass': accountData[0]['passWord']
                     }
             con.close()
         except:
