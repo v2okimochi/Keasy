@@ -35,7 +35,7 @@ class WindowGUI(QWidget):
         self.timerThread.CtrlTimeoutSignal.connect(self.timeout_Ctrl)
         self.timerThread.ShiftTimeoutSignal.connect(self.timeout_Shift)
         self.appTitle = 'Keasy'
-        self.version = '1.10'
+        self.version = '1.11'
         self.icon_path = 'icon.ico'
         self.command_maxLengthTxt = '60字まで'
         self.tray_toolchipTxt = 'Ctrlキーを2回押すことで展開します'
@@ -187,6 +187,23 @@ class WindowGUI(QWidget):
         except:
             traceback.print_exc()
     
+    # 文字列の記号に{}を付けて返す
+    # pywinauto_keyboard.SendKeysで記号を打ち込むため
+    def transStringForPywinauto(self, text) -> str:
+        check = '~!@#$%^&*()_+{}|:"<>?'  # 比較する記号群
+        translated = ''
+        # 記号にだけ{}をつける：例えば'f$7%' => 'f{$}7{%}'
+        for i in text:
+            match = False
+            for j in check:
+                if i == j:
+                    match = True
+            if match:
+                translated = ''.join([translated, '{' + i + '}'])
+            else:
+                translated = ''.join([translated, i])
+        return translated
+    
     # ユーザID/Mailとパスワードの自動入力
     def autoComplete(self):
         try:
@@ -198,10 +215,15 @@ class WindowGUI(QWidget):
             # IDorMailが取得されているなら自動入力
             if IDorMail == "":
                 return
+            # 記号を打ち込めるように変換
+            IDorMail_translated = self.transStringForPywinauto(IDorMail)
+            passWord_translated = self.transStringForPywinauto(passWord)
             # Windowsの場合
             if os_name == 'nt':
                 pywinauto_keyboard.SendKeys(
-                    IDorMail + '{TAB}' + passWord, pause=0
+                    IDorMail_translated +
+                    '{TAB}' +
+                    passWord_translated, pause=0
                 )
         except:
             traceback.print_exc()
@@ -217,13 +239,16 @@ class WindowGUI(QWidget):
             # IDorMailが取得されているなら，片方を自動入力
             if IDorMail == "":
                 return
+            # 記号を打ち込めるように変換
+            IDorMail_translated = self.transStringForPywinauto(IDorMail)
+            passWord_translated = self.transStringForPywinauto(passWord)
             # 0:ID/Mail, 1:passWord
             if self.cmdEvt.completeTarget == 0:
                 if os_name == 'nt':
-                    pywinauto_keyboard.SendKeys(IDorMail, pause=0)
+                    pywinauto_keyboard.SendKeys(IDorMail_translated, pause=0)
             else:
                 if os_name == 'nt':
-                    pywinauto_keyboard.SendKeys(passWord, pause=0)
+                    pywinauto_keyboard.SendKeys(passWord_translated, pause=0)
         except:
             traceback.print_exc()
     
