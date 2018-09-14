@@ -300,6 +300,29 @@ class Database:
             traceback.print_exc()
         return Account
     
+    # Accountsテーブルから，引数のアカウント番号が紐付くServiceIDを探す
+    # 見つかればServiceIDを，見つからなければ0を返す
+    def getServiceID_from_AccountsTable(self, accountNum: int) -> int:
+        ServiceID = 0
+        try:
+            con = sqlite3.connect(self.dbName)
+            cur = con.cursor()
+            cur.execute(
+                "select service from %s where id = %s"
+                % (self.accounts_table, accountNum)
+            )
+            for row in cur:
+                ServiceID = row[0]
+            con.commit()
+            con.close()
+            # debug==========
+            # print('=======getAccount_from_AccountsTable=====')
+            # print('Account: ', end='')
+            # print(Account)
+        except:
+            traceback.print_exc()
+        return ServiceID
+    
     # 引数のアカウント番号を使って，accountsテーブルからアカウント取得
     # 見つかれば辞書型で
     # [0]['accountID', 'userIDorMail', 'passWord', 'remarks']を返す
@@ -477,9 +500,9 @@ class Database:
             )))
             con.commit()
             con.close()
-            return resultList
         except:
             traceback.print_exc()
+        return resultList
     
     # DBの既存serviceNameにアカウント追加
     # accountsテーブルのみ

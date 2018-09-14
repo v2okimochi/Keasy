@@ -65,7 +65,7 @@ You have to install libraries (PyQt5.9, keyboard0.11.0, and also) used by Keasy 
 You can download latest exe file from following link.  
 I checked the operation only on Windows10 x86-64.
 
-<b>[Keasy version1.11](https://drive.google.com/file/d/1wXTiKRUegY4knPaMEuMqrX1lTK-iIBzj/view?usp=sharing) ( 37MB )</b>
+<b>[Keasy version1.12](https://drive.google.com/file/d/1BiKvMVem2XMj1CbaSXPrbjFT3JPFzNQj/view?usp=sharing) ( 37MB )</b>
 
 
 ## Build Keasy yourself for Windows
@@ -314,6 +314,9 @@ I would like to make Keasy a convenience GUI password manager which able to run 
 <a id = "Release-note"></a>
 # Release note
 ## version 1.x
+
+* 1.12  
+Fixed to reject editing userID/Mail when the new one will be same of exist userID/Mail in DB.
 
 * 1.11  
 Fixed a fatal error that cannot input symbols at auto-input.

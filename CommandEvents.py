@@ -1496,6 +1496,19 @@ class CommandEvents(QObject):
         
         AccountNum = self.editableRecord['accountID']
         newIDorMail = cmdMain
+        serviceID = self.db.getServiceID_from_AccountsTable(AccountNum)
+        
+        # 対象サービス名に同名のユーザID/Mailがあれば拒否
+        accounts = self.db.getAccountNums_from_AccountsTable(
+            serviceID, cmdMain
+        )
+        if len(accounts) > 0:
+            self.response(
+                '1つのサービス名に同名のユーザID/Mailを'
+                '紐付けることはできません．'
+            )
+            return
+        
         # アカウント番号からsearchWordを特定して変更
         self.db.editIDorMail(AccountNum, newIDorMail)
         self.encryptDB()  # DB暗号化
