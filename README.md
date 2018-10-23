@@ -65,7 +65,7 @@ You have to install libraries (PyQt5.9, keyboard0.11.0, and also) used by Keasy 
 You can download latest exe file from following link.  
 I checked the operation only on Windows10 x86-64.
 
-<b>[Keasy version1.12](https://drive.google.com/file/d/1BiKvMVem2XMj1CbaSXPrbjFT3JPFzNQj/view?usp=sharing) ( 37MB )</b>
+<b>[Keasy version1.13](https://drive.google.com/open?id=1xU4sUQ-jqfO4xQ7w4vMWbuFruGwu7uBo) ( 37MB )</b>
 
 
 ## Build Keasy yourself for Windows
@@ -302,6 +302,12 @@ If you want to input password, press "ctrl+(shift->shift)" then switch data for 
 
 It switches data to user-name or password every time press this hotkey.
 
+You can distinguish visually which data can input because Keasy's icon in task tray is changing.
+
+Can input UserID/Mail: <img src="icon.ico" width=30x30>
+
+Can input Password: <img src="icon2.ico" width=30x30>
+
 
 <a id = "Contribution"></a>
 
@@ -314,6 +320,9 @@ I would like to make Keasy a convenience GUI password manager which able to run 
 <a id = "Release-note"></a>
 # Release note
 ## version 1.x
+
+* 1.13  
+Add new icon to distinguish UserID/Mail or Password which can input now at Single-auto-complete mode.
 
 * 1.12  
 Fixed to reject editing userID/Mail when the new one will be same of exist userID/Mail in DB.

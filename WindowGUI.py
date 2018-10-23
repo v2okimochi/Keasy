@@ -35,8 +35,9 @@ class WindowGUI(QWidget):
         self.timerThread.CtrlTimeoutSignal.connect(self.timeout_Ctrl)
         self.timerThread.ShiftTimeoutSignal.connect(self.timeout_Shift)
         self.appTitle = 'Keasy'
-        self.version = '1.11'
+        self.version = '1.13'
         self.icon_path = 'icon.ico'
+        self.icon2_path = 'icon2.ico'
         self.command_maxLengthTxt = '60字まで'
         self.tray_toolchipTxt = 'Ctrlキーを2回押すことで展開します'
         self.history = ['']  # コマンド履歴用
@@ -174,10 +175,19 @@ class WindowGUI(QWidget):
     # autoComplete_singleで自動入力する対象を切り替える
     def switchMemorize(self):
         try:
+            # completeTarget=
+            # 0: ユーザID/Mail
+            # 1:パスワード
             if self.cmdEvt.completeTarget == 0:
                 self.cmdEvt.completeTarget = 1
+                self.tray.setIcon(
+                    QIcon(self.resource_path(self.icon2_path))
+                )
             else:
                 self.cmdEvt.completeTarget = 0
+                self.tray.setIcon(
+                    QIcon(self.resource_path(self.icon_path))
+                )
             if os_name == 'nt':
                 mes = ['ユーザID/Mail', 'パスワード']
                 self.tray.showMessage(
