@@ -1,7 +1,8 @@
 # <img src="icon.ico" width=50x50> Keasy - Password Manager
-Keasy is open source GUI password manager. You can use it only by command which CLI-like.
+Keasy is open source GUI password manager. You can use it only by command which CLI-like. This is Beta version.
 
-This is alpha version. Almost functions work only on Windows now yet.
+Adding support for OS X (Mac) at Keasy 2.0!  
+However, it's incomplete that it run on console only and cannot work correctly hiding/showing app into task tray.
 
 * [What is convenience of Keasy?](#What-is-convenience-of-Keasy?)
 * [Structure](#Structure)
@@ -52,43 +53,52 @@ And Keasy delete "keasy.db" before quit itself.
 
 # Run / Download
 ## Use with Python3
-You should run Keasy.py to use Keasy application.  
+You should run Keasy.py to use Keasy on Python3.  
 For example if you use python3.6...
 ```console
 # python3.6 Keasy.py
 ```
 
-You have to install libraries (PyQt5.9, keyboard0.11.0, and also) used by Keasy into your python3.
+You have to install libraries used by Keasy into your python3.
 
+And, you should choose script on WindowController.py whether you are using Windows or OS X (Mac).
 
-## Download for Windows x86-64
+For example, if you are using Windows, please choose script at upper on following. If you are using OS X, please choose script at under.
+```
+def controlWindow(gui):
+    # =================================
+    # Windowsの場合
+    # =================================
+    from WinWindow import ControlWindowForWindows
+    windowController = ControlWindowForWindows(gui)
+    # =================================
+    # Macの場合
+    # =================================
+    # from MacWindow import ControlWindowForMac
+    # windowController = ControlWindowForMac(gui)
+    return windowController
+```
+
+## Download application
 You can download latest exe file from following link.  
 I checked the operation only on Windows10 x86-64.
 
-<b>[Keasy version1.13](https://drive.google.com/open?id=1xU4sUQ-jqfO4xQ7w4vMWbuFruGwu7uBo) ( 37MB )</b>
+<b>[Keasy version2.0](http://www.mediafire.com/file/t0boeyto6cza5yy/Keasy_v2.0.zip/file) ( 36MB )</b> <= Limited support for Mac with Python3 console only
+
+<b>[Keasy version1.13](http://www.mediafire.com/file/a3jzkcrp4txs5el/Keasy_v1.13.zip/file) ( 37MB )</b> <= Windows only
 
 
 ## Build Keasy yourself for Windows
 You can build Keasy to .exe file yourself with PyInstaller. Keasy.exe of Above link is also built by PyInstaller.  
 
-If you will build it at your working directory "Keasy", you should use this command on your PowerShell using PyInstaller.
+If you will build it at your working directory "Keasy", you should use PyInstaller with spec file.  
 
-```console
-PS [your working directory]\Keasy> pyinstaller --onefile --noconsole --icon icon.ico --hidden-import comtypes.gen._944DE083_8FB8_45CF_BCB7_C477ACB2F897_0_1_0 --hidden-import comtypes.gen.UIAutomationClient --path C:\Windows\WinSxS\amd64_avg.vc140.crt_f92d94485545da78_14.0.24210.0_none_69fa0197d9b096ae\ .\Keasy.py
+For example, if you are using Windows, please run following command by your PowerShell:
+```
+> pyinstaller .\Keasy.spec
 ```
 
-Path which specified by --path may be different on your Windows.
-
-I did the optional to avoid warning that "lib not found: api-ms-win-crt-stdio-l1-1-0.dll" with building.
-
-***
-
-You should add icon's path(icon name, absolute path to icon) to "Keasy.spec" in order to displayable icon at application and task bar.
-```console
-a.datas += [('icon.ico', '[absolute directory path to icon.ico]\icon.ico', 'DATA')]
-```
-
-For example following (If your working directory is "Keasy/").  
+This is spec file example (on Windows). 
 Please change path according to your working directory.
 
 ```python:Keasy.spec
@@ -108,7 +118,7 @@ a = Analysis(['Keasy.py'],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              cipher=block_cipher)
-a.datas += [('icon.ico', '[absolute path to your working directory]\Keasy\icon.ico', 'DATA')]
+a.datas += [('icon.png', '[absolute path to your working directory]\Keasy\icon.png', 'DATA')]
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
@@ -124,11 +134,11 @@ exe = EXE(pyz,
           console=False , icon='icon.ico')
 ```
 
-If you made "Keasy.spec" as above, you should not use above long pyinstaller command, but should use this command to build Keasy with your spec file.
-```console
-pyinstaller .\Keasy.spec
+If you are using Keasy1.13, you should change path to use icon.
+```diff
+- a.datas += [('icon.png', '[absolute path to your working directory]\Keasy\icon.png', 'DATA')]
++ a.datas += [('icon.ico', '[absolute path to your working directory]\Keasy\icon.ico', 'DATA')]
 ```
-
 
 <a id = "Usage"></a>
 
@@ -319,8 +329,11 @@ I would like to make Keasy a convenience GUI password manager which able to run 
 
 <a id = "Release-note"></a>
 # Release note
-## version 1.x
+## version 2.x
+* 2.0  
+Added support for OS X (limited that it can be run on console only)
 
+## version 1.x
 * 1.13  
 Add new icon to distinguish UserID/Mail or Password which can input now at Single-auto-complete mode.
 

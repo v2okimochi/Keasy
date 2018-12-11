@@ -3,8 +3,7 @@ import sqlite3
 import traceback
 
 
-# [Eng] dict key is...
-# [日] 辞書型のキーは以下
+# 辞書型のキーは以下
 # serviceID, serviceName, searchWord, LoginURL,
 # accountID, userIDorMail, passWord, remarks
 
@@ -13,7 +12,7 @@ class Database:
         self.dbName = 'keasy.db'
         self.services_table = 'Services'
         self.accounts_table = 'Accounts'
-        
+
         try:
             con = sqlite3.connect(self.dbName)
             # もしテーブルが無ければ作る
@@ -33,17 +32,17 @@ class Database:
                         "password string not null,"  # パスワード
                         "remarks string)"  # 備考
                         % (self.accounts_table))
-            
+
             con.commit()  # SQLを確定
             con.close()
         except:
             traceback.print_exc()
-    
+
     # DBが正しく復号化されていればTrueを返す
     # 復号化が誤っていればFalseを返す
     def checkDB(self):
         try:
-            with open("keasy.db", "rb") as fileData:
+            with open("./keasy.db", "rb") as fileData:
                 # DBファイルのバイナリ取得(エンコードはutf16)
                 contents = fileData.read()
             # ファイル先頭6字がバイナリで'SQLite'でない場合はFalseを返す
@@ -54,7 +53,7 @@ class Database:
         except:
             traceback.print_exc()
             return False
-    
+
     # デバッグ用：全データ表示
     # [Eng] For Debug: display all DB data
     def getAllAccounts(self):
@@ -66,21 +65,21 @@ class Database:
             # print('============Tables ============')
             # for row in cur:
             #     print(row[0])
-            
+
             cur.execute("select * from %s" % (self.services_table))
             # print('============Values in Services Table ============')
             # for row in cur:
             #     print(row)
-            
+
             cur.execute("select * from %s" % (self.accounts_table))
             # print('============Values in Accounts Table ============')
             # for row in cur:
             #     print(row)
-            
+
             con.close()
         except:
             traceback.print_exc()
-    
+
     # デバッグ用：データ挿入
     # [Eng] For Debug: insert data
     def insertTest(self):
@@ -117,12 +116,12 @@ class Database:
                 "'40charsAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDD',"
                 "''"
                 ")" % (self.accounts_table))
-            
+
             con.commit()
             con.close()
         except:
             traceback.print_exc()
-    
+
     # serviceテーブルから，引数と全く同じ文字のサービス名があるか検索
     # 見つかったら該当サービス名のid(int)を返す
     # 見つからなかったら0を返す
@@ -137,13 +136,13 @@ class Database:
                 % (self.services_table, serviceName)
             )
             result = cur.fetchone()
-            
+
             # debug ==========
             # print('=====getServiceName_from_ServiceTable=====')
             # print('result: ', end='')
             # print(result)
             # debug ==========
-            
+
             con.close()
             if result == None:
                 return 0
@@ -152,7 +151,7 @@ class Database:
         except:
             traceback.print_exc()
             return 0
-    
+
     # 引数の文字列を使って，serviceテーブルからサービス名の検索
     # condition=
     #   include: search serviceName includes arg-searchWord
@@ -207,11 +206,11 @@ class Database:
             # print('Accounts result: ', end='')
             # print(result)
             # debug==========
-            
+
             # サービスが見つからなければ空リストを返す
             if len(result) < 1:
                 return Accounts
-            
+
             for i in range(len(result)):
                 # 入力文字と一致するサービス名の場合，
                 # そのデータだけを辞書型に変換
@@ -227,12 +226,12 @@ class Database:
                     ['serviceID', 'serviceName', 'searchWord', 'LoginURL'],
                     [result[i][0], result[i][1], result[i][2], result[i][3]]
                 )))
-            
+
             con.close()
         except:
             traceback.print_exc()
         return Accounts
-    
+
     # 引数のserviceIDを使って，serviceテーブルからサービス情報を取得
     # 見つかれば辞書型で
     # ['serviceName', 'searchWord', 'ログインURL']を返す
@@ -265,7 +264,7 @@ class Database:
         except:
             traceback.print_exc()
         return Accounts
-    
+
     # accountsテーブルから全データをserviceID順に取得
     # 辞書型で[num]['serviceName', 'searchWord', 'URL',
     #               'ユーザID/Mail', 'パスワード', '備考'] を返す
@@ -277,7 +276,7 @@ class Database:
             cur.execute("select * from %s order by service"
                         % (self.accounts_table))
             Account = []
-            
+
             for row in cur:
                 serviceData = self.getAccounts_from_ServiceTable(row[1])
                 serviceName = serviceData['serviceName']
@@ -299,7 +298,7 @@ class Database:
         except:
             traceback.print_exc()
         return Account
-    
+
     # Accountsテーブルから，引数のアカウント番号が紐付くServiceIDを探す
     # 見つかればServiceIDを，見つからなければ0を返す
     def getServiceID_from_AccountsTable(self, accountNum: int) -> int:
@@ -322,7 +321,7 @@ class Database:
         except:
             traceback.print_exc()
         return ServiceID
-    
+
     # 引数のアカウント番号を使って，accountsテーブルからアカウント取得
     # 見つかれば辞書型で
     # [0]['accountID', 'userIDorMail', 'passWord', 'remarks']を返す
@@ -351,7 +350,7 @@ class Database:
         except:
             traceback.print_exc()
         return Account
-    
+
     # 引数のserviceIDを使って，accountsテーブルからアカウント番号一覧を取得
     # 見つかればアカウント番号のリストを返す
     # 無ければ空リストを返す
@@ -373,7 +372,7 @@ class Database:
         except:
             traceback.print_exc()
         return Accounts
-    
+
     # 引数のURLを使って，serviceテーブルからアカウント取得
     # 見つかったアカウントが1つだけだった場合のみ，
     # accountsテーブルからユーザID/Mailとパスワードを取得して
@@ -425,7 +424,7 @@ class Database:
         except:
             traceback.print_exc()
         return IDAndPass
-    
+
     # 引数のserviceIDと文字列を使って，
     # accountsテーブルから該当するユーザID/Mailのアカウント番号を検索
     # 見つかったアカウント番号をリストで返す．
@@ -454,7 +453,7 @@ class Database:
         except:
             traceback.print_exc()
         return AccountNums
-    
+
     # accountsテーブルからアカウント検索
     # ServiceNameから始まるserviceNameのうち，
     # IDorMailから始まるユーザID/Mailに関するレコードを取得(7項目)
@@ -466,13 +465,13 @@ class Database:
         try:
             con = sqlite3.connect(self.dbName)
             cur = con.cursor()
-            
+
             cur.execute(
                 "select * from '%s' where id = '%s'"
                 % (self.services_table, ServiceID)
             )
             resultService = cur.fetchall()
-            
+
             cur.execute(
                 "select * from '%s' where service = '%s' and user like '%s'"
                 % (self.accounts_table, ServiceID, IDorMail + "%")
@@ -503,7 +502,7 @@ class Database:
         except:
             traceback.print_exc()
         return resultList
-    
+
     # DBの既存serviceNameにアカウント追加
     # accountsテーブルのみ
     # 成功ならTrue,例外が起きたらFalseを返す
@@ -523,7 +522,7 @@ class Database:
         except:
             traceback.print_exc()
             return False
-    
+
     # DBに新たなserviceNameでアカウント追加
     # serviceテーブルとaccountsテーブル両方
     # 成功ならTrue,例外が起きたらFalseを返す
@@ -537,7 +536,7 @@ class Database:
                 "values('%s','%s','%s')"
                 % (self.services_table, ServiceName, SearchWord, LoginURL))
             con.commit()
-            
+
             ServiceID = self.getServiceID_from_ServiceTable(ServiceName)
             con.execute(
                 "insert into %s(service,user,password,remarks) "
@@ -550,7 +549,7 @@ class Database:
         except:
             traceback.print_exc()
             return False
-    
+
     # serviceNameを変更
     def editServiceName(self, ServiceID: int, newServiceName: str) -> bool:
         try:
@@ -565,7 +564,7 @@ class Database:
         except:
             traceback.print_exc()
             return False
-    
+
     # searchWordを変更
     def editSearchWord(self, ServiceID: int, newSearchWord: str) -> bool:
         try:
@@ -580,7 +579,7 @@ class Database:
         except:
             traceback.print_exc()
             return False
-    
+
     # URLを変更
     def editLoginURL(self, ServiceID: int, newLoginURL: str) -> bool:
         try:
@@ -595,7 +594,7 @@ class Database:
         except:
             traceback.print_exc()
             return False
-    
+
     # ユーザID/Mailを変更
     def editIDorMail(self, AccountNum: int, newIDorMail: str) -> bool:
         try:
@@ -610,7 +609,7 @@ class Database:
         except:
             traceback.print_exc()
             return False
-    
+
     # パスワードを変更
     def editPassWord(self, AccountNum: int, newPassWord: str) -> bool:
         try:
@@ -625,7 +624,7 @@ class Database:
         except:
             traceback.print_exc()
             return False
-    
+
     # 備考を変更
     def editRemarks(self, AccountNum: int, newRemarks: str) -> bool:
         try:
@@ -640,7 +639,7 @@ class Database:
         except:
             traceback.print_exc()
             return False
-    
+
     # [Eng] delete serviceName using serviceID from service-table
     # [日]サービスIDを使ってサービス名を削除
     def deleteServiceName(self, serviceID: int) -> bool:
@@ -656,7 +655,7 @@ class Database:
         except:
             traceback.print_exc()
             return False
-    
+
     # [Eng] delete account using accountNum from accounts-table
     # [日]アカウント番号を使ってアカウントを削除
     def deleteAccount(self, accountNum: int) -> bool:
