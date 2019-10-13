@@ -83,6 +83,8 @@ def controlWindow(gui):
 You can download latest exe file from following link.  
 I checked the operation only on Windows10 x86-64.
 
+<b>[Keasy version2.1](http://www.mediafire.com/file/375z1s06u76x9t0/Keasy_v2.1.zip/file) ( 26MB )</b>
+
 <b>[Keasy version2.0](http://www.mediafire.com/file/t0boeyto6cza5yy/Keasy_v2.0.zip/file) ( 36MB )</b> <= Limited support for Mac with Python3 console only
 
 <b>[Keasy version1.13](http://www.mediafire.com/file/a3jzkcrp4txs5el/Keasy_v1.13.zip/file) ( 37MB )</b> <= Windows only
@@ -330,8 +332,11 @@ I would like to make Keasy a convenience GUI password manager which able to run 
 <a id = "Release-note"></a>
 # Release note
 ## version 2.x
+* 2.1  
+Added feature that output DB data as CSV.
+
 * 2.0  
-Added support for OS X (limited that it can be run on console only)
+Added support for OS X. (limited that it can be run on console only)
 
 ## version 1.x
 * 1.13  
